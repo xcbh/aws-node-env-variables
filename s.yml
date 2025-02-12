@@ -1,19 +1,26 @@
-service: function-with-environment-variables
+app: my-app                # 应用名称（可以自定义）
+service: function-with-environment-variables # 服务名称
+stage: dev                 # 阶段，可以选择 dev, prod 等
+region: cn-shanghai        # 部署的区域，阿里云上常用的区域（如 cn-shanghai）
 
-frameworkVersion: ">=1.2.0 <2.0.0"
+runtime: nodejs12.x        # Node.js 运行时环境，与 AWS 中的 runtime 相同
 
 provider:
-  name: aws
-  runtime: nodejs12.x
-  environment:
-    EMAIL_SERVICE_API_KEY: KEYEXAMPLE1234
+  name: aliyun             # 阿里云提供商
+  region: cn-shanghai      # 阿里云区域，选择与 AWS 配置相匹配的区域
+  credentials:
+    accessKeyId: ${env:ACCESS_KEY_ID}  # 阿里云凭证，使用环境变量存储安全凭证
+    accessKeySecret: ${env:ACCESS_KEY_SECRET}  # 阿里云凭证
 
 functions:
   createUser:
     handler: handler.createUser
     environment:
+      EMAIL_SERVICE_API_KEY: KEYEXAMPLE1234
       PASSWORD_ITERATIONS: 4096
       PASSWORD_DERIVED_KEY_LENGTH: 256
 
   resetPassword:
     handler: handler.resetPassword
+    environment:
+      EMAIL_SERVICE_API_KEY: KEYEXAMPLE1234
